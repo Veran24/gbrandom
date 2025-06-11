@@ -10,13 +10,19 @@ class GambarSeeder extends Seeder
 {
     public function run()
     {
-        $files = File::files(public_path('gambar'));
-        foreach ($files as $file) {
-            DB::table('gambars')->insert([
-                'filename' => $file->getFilename(),
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
+        $gambarPath = public_path('gambar');
+        
+        if (File::exists($gambarPath)) {
+            $files = File::files($gambarPath);
+            foreach ($files as $file) {
+                if (in_array(strtolower($file->getExtension()), ['jpg', 'jpeg', 'png', 'gif', 'webp'])) {
+                    DB::table('gambars')->insert([
+                        'filename' => $file->getFilename(),
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ]);
+                }
+            }
         }
     }
 }
